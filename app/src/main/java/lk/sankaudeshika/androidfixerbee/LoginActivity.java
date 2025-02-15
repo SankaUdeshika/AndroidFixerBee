@@ -1,6 +1,8 @@
 package lk.sankaudeshika.androidfixerbee;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +22,10 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        View view = getLayoutInflater().inflate(R.layout.login_sub_component,null);
+
+      LinearLayout login_lLinearLayout =  findViewById(R.id.LoginlinearLayout);
+      login_lLinearLayout.addView(view);
     }
 }

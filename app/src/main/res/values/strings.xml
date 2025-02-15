@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">AndroidFixerBee</string>
     <string name="Pleasewait">Please Wait</string>
+
+<!--    Login Component-->
+    <string name="Login_topic">Sign In</string>
+    <string name="Login_topic_subtopic">Please sign in here if you have a account</string>
+    <string name="Login_mobile">Enter Your Mobile</string>
+    <string name="Login_password">Enter Your Password</string>
+    <string name="Login_button">Sign In</string>
+
 </resources>
