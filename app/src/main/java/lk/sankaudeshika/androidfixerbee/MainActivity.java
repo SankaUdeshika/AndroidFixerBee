@@ -3,6 +3,7 @@ package lk.sankaudeshika.androidfixerbee;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -11,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +28,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+//        Logo Spring Animation
+        ImageView logoImageView = findViewById(R.id.imageView);
+        SpringAnimation springAnimation = new SpringAnimation(logoImageView, DynamicAnimation.TRANSLATION_Y);
+
+        SpringForce springForce = new SpringForce();
+        springForce.setStiffness(SpringForce.STIFFNESS_VERY_LOW);
+        springForce.setDampingRatio(SpringForce.DAMPING_RATIO_HIGH_BOUNCY);
+        springForce.setFinalPosition(600f);
+
+        springAnimation.setSpring(springForce);
+        springAnimation.start();
+
+
 
 //        Loading PreLoader Page
         ProgressBar progressBar = findViewById(R.id.progressBar);
