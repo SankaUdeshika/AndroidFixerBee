@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+<!--    main Theam Colors-->
+    <color name="primaryColor">#D3C3FD</color>
+    <color name="SecondColor">#B591F6</color>
+
+    <!--    Text Colors-->
+    <color name="mainText">#FF000000</color>
+    <color name="subText">#6D6A6A</color>
+
+
 </resources>
