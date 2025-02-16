@@ -2,11 +2,24 @@
     <string name="app_name">AndroidFixerBee</string>
     <string name="Pleasewait">Please Wait</string>
 
-<!--    Login Component-->
-    <string name="Login_topic">Sign In</string>
+<!--    Common-->
+    <string name="Next">Next</string>
+
+
+    <!--    Login Component-->
+    <string name="Login_topic">User Sign In</string>
     <string name="Login_topic_subtopic">Please sign in here if you have a account</string>
     <string name="Login_mobile">Enter Your Mobile</string>
     <string name="Login_password">Enter Your Password</string>
     <string name="Login_button">Sign In</string>
+    <string name="Register_Link">Already Have a Account? Click here</string>
+
+<!--        Register Component-->
+    <string name="register_topic">User Register</string>
+    <string name="register_topic_subtopic">Please Register if You do not have an account</string>
+    <string name="register_mobile">Enter Your Mobile</string>
+    <string name="register_name">Enter Your Name</string>
+    <string name="register_email">Enter Your Email</string>
+    <string name="register_password">Enter Your Password</string>
 
 </resources>

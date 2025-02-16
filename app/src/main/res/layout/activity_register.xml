@@ -6,23 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/SecondColor"
-    tools:context=".LoginActivity">
+    tools:context=".RegisterActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="casual"
-        android:text="@string/app_name"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView5"
+    <LinearLayout
+        android:id="@+id/registerLienarLayout"
+        android:layout_width="411dp"
+        android:layout_height="572dp"
+        android:background="#F0EFF4"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/imageView8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imageView7"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginBottom="-1dp"
+        app:layout_constraintBottom_toTopOf="@+id/registerLienarLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/half_round" />
+
+    <ImageView
+        android:id="@+id/imageView8"
         android:layout_width="0dp"
         android:layout_height="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,37 +42,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/half_rotated" />
 
-    <LinearLayout
-        android:id="@+id/registerLienarLayout"
-        android:layout_width="408dp"
-        android:layout_height="428dp"
-        android:background="#F0EFF4"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/imageView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </LinearLayout>
-
     <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginBottom="-1dp"
-        app:layout_constraintBottom_toTopOf="@+id/registerLienarLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/half_round" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="224dp"
-        android:layout_height="135dp"
-        android:layout_marginTop="27dp"
+        android:id="@+id/imageView2"
+        android:layout_width="205dp"
+        android:layout_height="163dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
