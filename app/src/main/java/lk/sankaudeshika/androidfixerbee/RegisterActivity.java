@@ -150,6 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                             document.put("mobile",mobile.getText().toString());
                                                             document.put("name",name.getText().toString());
                                                             document.put("email",email.getText().toString());
+                                                            document.put("password",password.getText().toString());
                                                             document.put("status","active");
                                                             document.put("address","");
                                                             document.put("latitude",latitude);

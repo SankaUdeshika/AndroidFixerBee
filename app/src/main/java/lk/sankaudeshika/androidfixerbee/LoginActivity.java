@@ -164,6 +164,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                             if(String.valueOf(documentItem.get("status")).equals("active")){
                                                 Log.i("appout","Go Dashabord");
+                                                Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                                                startActivity(intent);
 
                                             }else if(String.valueOf(documentItem.get("status")).equals("deactive")){
                                                 new AlertDialog.Builder(LoginActivity.this).setTitle("Your Account is Restriced,").setMessage("Please Try Contact Us and Get Solution for this").show();
