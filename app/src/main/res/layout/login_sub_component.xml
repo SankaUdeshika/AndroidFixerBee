@@ -64,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@+id/loginMobile" />
 
     <EditText
-        android:id="@+id/editTextNumberPassword"
+        android:id="@+id/loginPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -78,7 +78,7 @@
         app:layout_constraintTop_toBottomOf="@+id/loginMobile" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -88,7 +88,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/loginPassword" />
 
     <TextView
         android:id="@+id/textView8"
@@ -98,14 +98,14 @@
         android:layout_marginEnd="48dp"
         android:text="@string/Register_Link"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/loginPassword" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/loginRememberMeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/REMEMBER"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
