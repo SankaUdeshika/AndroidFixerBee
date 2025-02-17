@@ -161,6 +161,9 @@ public class RegisterActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onSuccess(DocumentReference documentReference) {
                                                                             Log.i("appout", "onSuccess: Success"+documentReference.get());
+                                                                            Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+                                                                            i.putExtra("RegisterMessage",1);
+                                                                            startActivity(i);
                                                                         }
                                                                     });
 
