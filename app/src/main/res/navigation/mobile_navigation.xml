@@ -22,4 +22,12 @@
         android:name="lk.sankaudeshika.androidfixerbee.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <!--  MyFragments  -->
+    <fragment
+        android:id="@+id/nav_myProfile"
+        android:name="lk.sankaudeshika.androidfixerbee.ui.myprofile.MyProfileFragment"
+        android:label="@string/menu_myprofile"
+        tools:layout="@layout/fragment_my_profile" />
+
 </navigation>
