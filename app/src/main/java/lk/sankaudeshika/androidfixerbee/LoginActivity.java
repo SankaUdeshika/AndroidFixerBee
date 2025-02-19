@@ -64,16 +64,8 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("appout", "switch is false");
             rememberMeSwitch.setChecked(false);
         }
-//
 
-//            view.findViewById(R.id.loginRememberMeSwitch).setActivated(true);
-//        else if(sp.getString("switch",null).equals("false")){
-//            Log.i("appout", "SwitchNo");
-//            view.findViewById(R.id.loginRememberMeSwitch).setActivated(false);
-//        }
-
-//        Log.i("appout", String.valueOf("switch"+sp.getString("switch",null)));
-
+//       set mobile numbet SP to text field
         String logedMobile = sp.getString("mobile", null);
         if (logedMobile == null) {
             Log.i("appout", "null");
@@ -92,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setMessage("Please Sign into you Account")
                     .show();
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString("mobile", "0764213724");
+            editor.putString("mobile", logedMobile);
             editor.apply();
         }
 

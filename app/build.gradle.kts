@@ -52,4 +52,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
+    implementation("com.google.code.gson:gson:2.8.8")
 }

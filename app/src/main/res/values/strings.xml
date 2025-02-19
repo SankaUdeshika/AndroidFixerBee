@@ -40,6 +40,9 @@
     <!--  My Profile text  -->
     <string name="action_profile_imageChange">Change Image</string>
 
+    <!-- Find Services Page-->
+    <string name="services_Topic">Change Image</string>
+
 
     <!--    Navigation Text-->
     <string name="menu_home">Home</string>
