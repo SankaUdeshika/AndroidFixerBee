@@ -43,6 +43,18 @@
     <!-- Find Services Page-->
     <string name="services_Topic">Change Image</string>
 
+    <!--  Service View Page  -->
+    <string name="service_email">Email</string>
+    <string name="service_locaiton">Location</string>
+    <string name="service_mobile_1">Mobile</string>
+    <string name="service_mobile_2">Tel</string>
+    <string name="service_seller_company">Company Name</string>
+    <string name="service_seller_name">Vendor Name</string>
+    <string name="service_status">status</string>
+    <string name="service_sub_category">Service</string>
+    <string name="service_MakeCall">Make Call</string>
+
+
 
     <!--    Navigation Text-->
     <string name="menu_home">Home</string>

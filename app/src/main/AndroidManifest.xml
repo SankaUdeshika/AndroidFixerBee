@@ -47,5 +47,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBHBpJkSj-glfrU1YGPqRhpvZU7j-w0SM0" />
     </application>
+<!--    my persmissions-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
 
 </manifest>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -147,8 +148,10 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
             @Override
             public void onClick(View view) {
                 Toast.makeText(context,  service.getMobile_1(), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(context.this,)
-
+                Intent intent = new Intent(view.getContext(),ServiceViewActivity.class);
+                intent.putExtra("CompanyMobile",service.getMobile_1());
+                intent.putExtra("CompanyName",service.getSeller_company());
+                ContextCompat.startActivity(context,intent,null);
             }
         });
     }
