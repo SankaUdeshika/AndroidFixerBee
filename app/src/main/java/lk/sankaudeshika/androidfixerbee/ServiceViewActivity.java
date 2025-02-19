@@ -1,14 +1,20 @@
 package lk.sankaudeshika.androidfixerbee;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,15 +40,7 @@ import java.util.List;
 
 public class ServiceViewActivity extends AppCompatActivity {
 
-    //        Seller Details
-    String mobile_1 ;
-    String mobile_2;
-    String companyName;
-    String sellerName;
-    String status;
-    String sub_category;
-    String email;
-    String location;
+    String mobile ;
     double locaiton_latitude;
     double locaiton_longitude;
     LatLng latlanObject = new LatLng(locaiton_latitude,locaiton_longitude);
@@ -89,6 +87,7 @@ public class ServiceViewActivity extends AppCompatActivity {
 
                         for (DocumentSnapshot documentItem: documentSnapshots ) {
                                service_mobile_1.setText(documentItem.getString("mobile_1"));
+                               mobile = documentItem.getString("mobile_1");
                                service_mobile_2.setText(documentItem.getString("mobile_2"));
                                service_seller_company.setText(documentItem.getString("seller_company"));
                                service_seller_name.setText(documentItem.getString("seller_name"));
@@ -98,7 +97,7 @@ public class ServiceViewActivity extends AppCompatActivity {
                                service_locaiton.setText(documentItem.getString("locaiton"));
                                locaiton_latitude= Double.parseDouble(documentItem.getString("locaiton_latitude")) ;
                                locaiton_longitude=Double.parseDouble(documentItem.getString("locaiton_longitude"));
-                            Log.i("appout",String.valueOf(locaiton_longitude));
+                               Log.i("appout",String.valueOf(locaiton_longitude));
                         }
 
                     }
@@ -112,9 +111,27 @@ public class ServiceViewActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
 //        MakeCall Btn
-        if(checkSelfPermission(M)){
+        Button callBtn = findViewById(R.id.callbtn);
+        callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+                    Log.i("appout", "onCreate: Permission yes");
+                    Intent i = new Intent(Intent.ACTION_CALL);
+                    Uri uri = Uri.parse("tel:"+mobile);
+                    i.setData(uri);
+                    startActivity(i);
+                }else{
 
-        }
+                    String permissionArray [] = new String[1];
+                    permissionArray[0] = Manifest.permission.CALL_PHONE;
+                    requestPermissions(permissionArray,100);
+                }
+            }
+        });
+
+
+
 
 
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -140,4 +157,19 @@ public class ServiceViewActivity extends AppCompatActivity {
         });
 
     }
+    // Handle Permission Request Result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i("appout", "Permission granted");
+
+            } else {
+                Log.i("appout", "Permission denied");
+            }
+        }
+    }
+
 }
