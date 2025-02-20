@@ -2,7 +2,7 @@
     <string name="app_name">AndroidFixerBee</string>
     <string name="Pleasewait">Please Wait</string>
 
-<!--    Common-->
+    <!--    Common-->
     <string name="Next">NEXT</string>
     <string name="Ok">OK</string>
     <string name="cancel">CANCEL</string>
@@ -18,7 +18,7 @@
     <string name="Login_button">Sign In</string>
     <string name="Register_Link">Already Have a Account? Click here</string>
 
-<!--        Register Component-->
+    <!--        Register Component-->
     <string name="register_topic">User Register</string>
     <string name="register_topic_subtopic">Please Register if You do not have an account</string>
     <string name="register_mobile">Enter Your Mobile</string>
@@ -26,8 +26,50 @@
     <string name="register_email">Enter Your Email</string>
     <string name="register_password">Enter Your Password</string>
 
-<!--    google maps text-->
+    <!--    google maps text-->
     <string name="address_map_Alert"> if you need this service. you have to give your home location</string>
     <string name="address_map_Description">Please Search you Locatin and Hit Save Button</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!--  My Profile text  -->
+    <string name="action_profile_imageChange">Change Image</string>
+
+    <!-- Find Services Page-->
+    <string name="services_Topic">Change Image</string>
+
+    <!--  Service View Page  -->
+    <string name="service_email">Email</string>
+    <string name="service_locaiton">Location</string>
+    <string name="service_mobile_1">Mobile</string>
+    <string name="service_mobile_2">Tel</string>
+    <string name="service_seller_company">Company Name</string>
+    <string name="service_seller_name">Vendor Name</string>
+    <string name="service_status">status</string>
+    <string name="service_sub_category">Service</string>
+    <string name="service_MakeCall">Make Call</string>
+    <string name="service_MakeService">Book Now</string>
+
+    <!--  Book Now Page  -->
+    <string name="BookNow_BookNowTopic">Please Fill the Book Now form</string>
+    <string name="BookNow_pickaupDate">Pickup Service Date</string>
+    <string name="BookNow_pickaupTime">Pickup Service Time</string>
+    <string name="BookNow_Description">Enter Your Description</string>
+    <string name="BookNow_BookNow_Btn">Book Now</string>
+
+
+    <!--    Navigation Text-->
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <!--   My Navigation Text-->
+    <string name="menu_myprofile">My Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

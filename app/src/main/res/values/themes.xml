@@ -6,4 +6,13 @@
     </style>
 
     <style name="Theme.AndroidFixerBee" parent="Base.Theme.AndroidFixerBee" />
+
+    <style name="Theme.AndroidFixerBee.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AndroidFixerBee.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.AndroidFixerBee.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

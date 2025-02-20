@@ -64,16 +64,8 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("appout", "switch is false");
             rememberMeSwitch.setChecked(false);
         }
-//
 
-//            view.findViewById(R.id.loginRememberMeSwitch).setActivated(true);
-//        else if(sp.getString("switch",null).equals("false")){
-//            Log.i("appout", "SwitchNo");
-//            view.findViewById(R.id.loginRememberMeSwitch).setActivated(false);
-//        }
-
-//        Log.i("appout", String.valueOf("switch"+sp.getString("switch",null)));
-
+//       set mobile numbet SP to text field
         String logedMobile = sp.getString("mobile", null);
         if (logedMobile == null) {
             Log.i("appout", "null");
@@ -92,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setMessage("Please Sign into you Account")
                     .show();
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString("mobile", "0764213724");
+            editor.putString("mobile", logedMobile);
             editor.apply();
         }
 
@@ -141,7 +133,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                         for (DocumentSnapshot documentItem : documentList ) {
                                             SharedPreferences.Editor editor = sp.edit();
-
+                                            editor.putString("Logged_mobile",String.valueOf(documentItem.getString("mobile")));
+                                            editor.putString("Logged_user_id",documentItem.getId());
                                             if(rememberMeSwitch.isChecked() == true){
                                                 Log.i("appout","Go Dashabord");
                                                 editor.putString("mobile",String.valueOf(documentItem.get("mobile")));
@@ -164,6 +157,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                             if(String.valueOf(documentItem.get("status")).equals("active")){
                                                 Log.i("appout","Go Dashabord");
+                                                Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                                                startActivity(intent);
 
                                             }else if(String.valueOf(documentItem.get("status")).equals("deactive")){
                                                 new AlertDialog.Builder(LoginActivity.this).setTitle("Your Account is Restriced,").setMessage("Please Try Contact Us and Get Solution for this").show();
