@@ -1,12 +1,15 @@
 package lk.sankaudeshika.androidfixerbee;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -15,6 +18,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lk.sankaudeshika.androidfixerbee.databinding.ActivityHomeBinding;
+import lk.sankaudeshika.androidfixerbee.databinding.FragmentMyBookingBinding;
+import lk.sankaudeshika.androidfixerbee.ui.gallery.GalleryFragment;
+import lk.sankaudeshika.androidfixerbee.ui.mybookings.MyBookingFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -42,12 +48,26 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_myProfile)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_myProfile,R.id.nav_myBookings)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
+        //        get Intent Details
+        Intent i = getIntent();
+        Log.i("appout", "onCreate: "+i.getStringExtra("bookingresult"));;
+        String BookingDetails = i.getStringExtra("bookingresult");
+        if(BookingDetails==null){
+            Log.i("appout", "onCreate: dasdasd");
+        }else{
+            new AlertDialog.Builder(HomeActivity.this).setTitle("You Booking is Saved").setMessage("you can check your Bookings from My Booking Section").show();
+        }
+
+
+
     }
 
     @Override

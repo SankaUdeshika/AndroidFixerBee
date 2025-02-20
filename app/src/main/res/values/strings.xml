@@ -69,6 +69,7 @@
     <string name="menu_slideshow">Slideshow</string>
     <!--   My Navigation Text-->
     <string name="menu_myprofile">My Profile</string>
+    <string name="menu_mybokkings">My Bookings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
