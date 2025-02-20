@@ -36,6 +36,8 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
+
 //        set Image Sliders
         ImageSlider imageSlider = root.findViewById(R.id.ImageSlider);
         ArrayList<SlideModel> slideModels = new ArrayList<>();
@@ -44,6 +46,9 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.banner2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner3, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner4, ScaleTypes.FIT));
+
+
+
 
         imageSlider.setImageList(slideModels,ScaleTypes.FIT);
 
@@ -57,6 +62,7 @@ public class HomeFragment extends Fragment {
                         actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_NEXT ||
                         (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
 
+//                    set Search
                     String text = editText.getText().toString();
                     Intent i = new Intent(root.getContext(), ServiceSearchActivity.class);
                     i.putExtra("SearchText",text);

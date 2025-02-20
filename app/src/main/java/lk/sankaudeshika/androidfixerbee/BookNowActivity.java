@@ -2,7 +2,6 @@ package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.zip.Inflater;
+
+import lk.sankaudeshika.androidfixerbee.ui.mybookings.MyBookingFragment;
 
 public class BookNowActivity extends AppCompatActivity {
 
@@ -109,7 +109,25 @@ public class BookNowActivity extends AppCompatActivity {
                     BookingMap.put("vendor_id",vendor_id);
                     BookingMap.put("vendor_mobile",vendor_mobile);
 
-                    firestore.collection("booking").add(BookingMap);
+                    firestore.collection("booking").add(BookingMap)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    MyBookingFragment myBookingFragment = new MyBookingFragment();
+
+                                    Intent intent1 = new Intent(BookNowActivity.this, HomeActivity.class);
+                                    intent1.putExtra("bookingresult","Yes");
+                                    startActivity(intent1);
+
+                                }
+                            })
+
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    new AlertDialog.Builder(BookNowActivity.this).setTitle("Error").setMessage("Something Wrong, Please Try again later").show();
+                                }
+                            });
 
 
 
