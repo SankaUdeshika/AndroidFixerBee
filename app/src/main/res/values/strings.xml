@@ -53,7 +53,14 @@
     <string name="service_status">status</string>
     <string name="service_sub_category">Service</string>
     <string name="service_MakeCall">Make Call</string>
+    <string name="service_MakeService">Book Now</string>
 
+    <!--  Book Now Page  -->
+    <string name="BookNow_BookNowTopic">Please Fill the Book Now form</string>
+    <string name="BookNow_pickaupDate">Pickup Service Date</string>
+    <string name="BookNow_pickaupTime">Pickup Service Time</string>
+    <string name="BookNow_Description">Enter Your Description</string>
+    <string name="BookNow_BookNow_Btn">Book Now</string>
 
 
     <!--    Navigation Text-->

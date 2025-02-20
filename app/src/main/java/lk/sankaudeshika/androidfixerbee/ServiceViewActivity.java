@@ -1,7 +1,9 @@
 package lk.sankaudeshika.androidfixerbee;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,6 +42,7 @@ import java.util.List;
 
 public class ServiceViewActivity extends AppCompatActivity {
 
+    String vendor_id;
     String mobile ;
     double locaiton_latitude;
     double locaiton_longitude;
@@ -86,6 +89,7 @@ public class ServiceViewActivity extends AppCompatActivity {
                         List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
 
                         for (DocumentSnapshot documentItem: documentSnapshots ) {
+                               vendor_id = documentItem.getId();
                                service_mobile_1.setText(documentItem.getString("mobile_1"));
                                mobile = documentItem.getString("mobile_1");
                                service_mobile_2.setText(documentItem.getString("mobile_2"));
@@ -127,6 +131,23 @@ public class ServiceViewActivity extends AppCompatActivity {
                     permissionArray[0] = Manifest.permission.CALL_PHONE;
                     requestPermissions(permissionArray,100);
                 }
+            }
+        });
+
+//        Send BookNow Activity
+        Button BookNowBtn = findViewById(R.id.BookNow);
+        BookNowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sp = getSharedPreferences("lk.sankaudeshika.androidfixerbee", Context.MODE_PRIVATE);
+                String LoggedUser_id = sp.getString("Logged_user_id","null");
+                Intent i  = new Intent(ServiceViewActivity.this,BookNowActivity.class);
+                i.putExtra("Customer_mobile_1",Coompan_mobile);
+                i.putExtra("Logged_user_id",LoggedUser_id);
+                i.putExtra("vendor_id",vendor_id);
+                i.putExtra("vendor_mobile",mobile);
+
+                startActivity(i);
             }
         });
 
