@@ -1,6 +1,8 @@
 package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeBinding binding;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,4 +85,6 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }
+
