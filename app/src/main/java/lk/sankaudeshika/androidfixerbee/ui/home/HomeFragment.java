@@ -42,24 +42,6 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
 
-        //        sqlite Test
-        SqlHelper sqlHelper = new SqlHelper(root.getContext(), "activity.db",null,1);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    SQLiteDatabase sqLiteDatabase = sqlHelper.getReadableDatabase();
-                    Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM `actions`",new String[]{});
-
-                    while(cursor.moveToNext()){
-                        Log.d("appout", "run: "+cursor.getString(1)+" "+ cursor.getString(0));
-                    }
-                } catch (Exception e) {
-                    Log.e("appout", e.toString());
-                    throw new RuntimeException(e);
-                }
-            }
-        }).start();
 
 
 //        set Image Sliders

@@ -64,6 +64,8 @@
 
     <!--  Book Now Page  -->
     <string name="Action_menu">My Activities</string>
+    <string name="Action_date">Date :- </string>
+    <string name="Action_time">Time :- </string>
 
     <!--    Navigation Text-->
     <string name="menu_home">Home</string>
