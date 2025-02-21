@@ -3,6 +3,7 @@ package lk.sankaudeshika.androidfixerbee;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,11 +34,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import lk.sankaudeshika.androidfixerbee.model.SqlHelper;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -162,6 +167,25 @@ public class RegisterActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onSuccess(DocumentReference documentReference) {
                                                                             Log.i("appout", "onSuccess: Success"+documentReference.get());
+                                                                            //                                            SQL Insert Login
+                                                                            new Thread(new Runnable() {
+                                                                                @Override
+                                                                                public void run() {
+                                                                                    try {
+                                                                                        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                                                                                        String currunt_date  = simpleDate.format(new Date());
+                                                                                        SimpleDateFormat simpleTime = new SimpleDateFormat("HH:mm:ss");
+                                                                                        String currunt_time = simpleTime.format(new Date());
+
+                                                                                        SqlHelper sqlHelper = new SqlHelper(RegisterActivity.this,"activity.db",null,1);
+                                                                                        SQLiteDatabase sqLiteDatabase1 = sqlHelper.getWritableDatabase();
+                                                                                        sqLiteDatabase1.execSQL("INSERT INTO `actions` (`action_name`,`action_date`,`action_time`) VALUES('User Registerd','"+currunt_date+"','"+currunt_time+"')");
+                                                                                    } catch (Exception e) {
+                                                                                        Log.i("appout", e.toString());
+                                                                                        throw new RuntimeException(e);
+                                                                                    }
+                                                                                }
+                                                                            }).start();
                                                                             Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
                                                                             i.putExtra("RegisterMessage",1);
                                                                             startActivity(i);

@@ -1,7 +1,9 @@
 package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import lk.sankaudeshika.androidfixerbee.model.SqlHelper;
 import lk.sankaudeshika.androidfixerbee.ui.mybookings.MyBookingFragment;
 
 public class BookNowActivity extends AppCompatActivity {
@@ -58,7 +61,8 @@ public class BookNowActivity extends AppCompatActivity {
 //        Link Pickup Time Layout
         View pickupTime_View = inflater.inflate(R.layout.pickup_time,null,false);
 
-//        Popup DateBtn
+
+        //        Popup DateBtn
         Button dateBtn = findViewById(R.id.DateBtn);
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,9 +80,10 @@ public class BookNowActivity extends AppCompatActivity {
             }
         });
 
-//        Firebase Book Now
-       Button addBookingBtn =  findViewById(R.id.addBookingBtn);
-       addBookingBtn.setOnClickListener(new View.OnClickListener() {
+
+        //        Firebase Book Now
+        Button addBookingBtn =  findViewById(R.id.addBookingBtn);
+        addBookingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // validation
@@ -115,6 +120,27 @@ public class BookNowActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentReference documentReference) {
                                     MyBookingFragment myBookingFragment = new MyBookingFragment();
 
+                                    //                                            SQL Insert Login
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                                                String currunt_date  = simpleDate.format(new Date());
+                                                SimpleDateFormat simpleTime = new SimpleDateFormat("HH:mm:ss");
+                                                String currunt_time = simpleTime.format(new Date());
+
+                                                SqlHelper sqlHelper = new SqlHelper(BookNowActivity.this,"activity.db",null,1);
+                                                SQLiteDatabase sqLiteDatabase1 = sqlHelper.getWritableDatabase();
+                                                sqLiteDatabase1.execSQL("INSERT INTO `actions` (`action_name`,`action_date`,`action_time`) VALUES('User Booked','"+currunt_date+"','"+currunt_time+"')");
+
+                                            } catch (Exception e) {
+                                                Log.i("appout", e.toString());
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                    }).start();
+
                                     Intent intent1 = new Intent(BookNowActivity.this, HomeActivity.class);
                                     intent1.putExtra("bookingresult","Yes");
                                     startActivity(intent1);
@@ -135,7 +161,8 @@ public class BookNowActivity extends AppCompatActivity {
 
 
             }
-       });
+        });
+
 
 
     }

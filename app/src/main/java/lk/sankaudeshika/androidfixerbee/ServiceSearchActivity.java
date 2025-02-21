@@ -106,8 +106,6 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
         TextView CompanyMobile;
         TextView status;
         Button ViewServiceBtn;
-
-
         public ServiceViewHolder(@NonNull View itemView){
             super(itemView);
             CompanyName =  itemView.findViewById(R.id.textView14);
@@ -116,7 +114,6 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
             status = itemView.findViewById(R.id.textView20);
             ViewServiceBtn = itemView.findViewById(R.id.ViewServiceBtn);
         }
-
     }
 
     ArrayList<Service> ServiceArraylist;

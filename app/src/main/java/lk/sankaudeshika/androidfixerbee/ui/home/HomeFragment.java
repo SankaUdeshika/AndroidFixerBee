@@ -1,7 +1,10 @@
 package lk.sankaudeshika.androidfixerbee.ui.home;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +23,11 @@ import com.denzcoskun.imageslider.models.SlideModel;
 
 import java.util.ArrayList;
 
+import lk.sankaudeshika.androidfixerbee.LoginActivity;
 import lk.sankaudeshika.androidfixerbee.R;
 import lk.sankaudeshika.androidfixerbee.ServiceSearchActivity;
 import lk.sankaudeshika.androidfixerbee.databinding.FragmentHomeBinding;
+import lk.sankaudeshika.androidfixerbee.model.SqlHelper;
 
 public class HomeFragment extends Fragment {
 
@@ -37,6 +42,25 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
 
+        //        sqlite Test
+        SqlHelper sqlHelper = new SqlHelper(root.getContext(), "activity.db",null,1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    SQLiteDatabase sqLiteDatabase = sqlHelper.getReadableDatabase();
+                    Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM `actions`",new String[]{});
+
+                    while(cursor.moveToNext()){
+                        Log.d("appout", "run: "+cursor.getString(1)+" "+ cursor.getString(0));
+                    }
+                } catch (Exception e) {
+                    Log.e("appout", e.toString());
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+
 
 //        set Image Sliders
         ImageSlider imageSlider = root.findViewById(R.id.ImageSlider);
@@ -46,9 +70,6 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.banner2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner3, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner4, ScaleTypes.FIT));
-
-
-
 
         imageSlider.setImageList(slideModels,ScaleTypes.FIT);
 
@@ -76,6 +97,12 @@ public class HomeFragment extends Fragment {
 
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     @Override

@@ -3,6 +3,7 @@ package lk.sankaudeshika.androidfixerbee;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +29,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.Timer;
+
+import lk.sankaudeshika.androidfixerbee.model.SqlHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -154,6 +164,26 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString("switch","false").apply();
 
                                             }
+
+//                                            SQL Insert Login
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                                                        String currunt_date  = simpleDate.format(new Date());
+                                                        SimpleDateFormat simpleTime = new SimpleDateFormat("HH:mm:ss");
+                                                        String currunt_time = simpleTime.format(new Date());
+
+                                                        SqlHelper sqlHelper = new SqlHelper(LoginActivity.this,"activity.db",null,1);
+                                                        SQLiteDatabase sqLiteDatabase1 = sqlHelper.getWritableDatabase();
+                                                        sqLiteDatabase1.execSQL("INSERT INTO `actions` (`action_name`,`action_date`,`action_time`) VALUES('User Login','"+currunt_date+"','"+currunt_time+"')");
+                                                    } catch (Exception e) {
+                                                        Log.i("appout", e.toString());
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            }).start();
 
                                             if(String.valueOf(documentItem.get("status")).equals("active")){
                                                 Log.i("appout","Go Dashabord");
