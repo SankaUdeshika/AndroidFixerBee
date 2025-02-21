@@ -1,6 +1,8 @@
 package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +18,8 @@ import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 
+import lk.sankaudeshika.androidfixerbee.model.InternetBroadCast;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -28,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+//        BroadCast Internet Reciver
+        InternetBroadCast internetBroadCast = new InternetBroadCast();
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(internetBroadCast, intentFilter);
+
+
 
 //        Logo Spring Animation
         ImageView logoImageView = findViewById(R.id.imageView);
