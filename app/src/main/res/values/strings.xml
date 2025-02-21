@@ -62,6 +62,8 @@
     <string name="BookNow_Description">Enter Your Description</string>
     <string name="BookNow_BookNow_Btn">Book Now</string>
 
+    <!--  Book Now Page  -->
+    <string name="Action_menu">My Activities</string>
 
     <!--    Navigation Text-->
     <string name="menu_home">Home</string>

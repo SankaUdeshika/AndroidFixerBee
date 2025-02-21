@@ -36,4 +36,10 @@
         android:label="@string/menu_mybokkings"
         tools:layout="@layout/fragment_my_booking" />
 
+    <fragment
+        android:id="@+id/nav_MyAction"
+        android:name="lk.sankaudeshika.androidfixerbee.ui.myactivity.ActionActivityFragment"
+        android:label="@string/Action_menu"
+        tools:layout="@layout/fragment_action_activity" />
+
 </navigation>
