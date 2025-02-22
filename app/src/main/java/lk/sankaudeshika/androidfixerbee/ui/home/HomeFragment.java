@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
 
                 if(acceleration > SHAKE_THRESHOLD){
-                    Log.e("appout", "Goto Login"+);
+                    Log.e("appout", "Goto Login");
 
                     lastShakeTime = curruntTime;
 
