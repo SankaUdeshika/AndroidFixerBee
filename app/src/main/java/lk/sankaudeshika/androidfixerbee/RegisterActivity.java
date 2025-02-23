@@ -160,6 +160,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                             document.put("address","");
                                                             document.put("latitude",latitude);
                                                             document.put("longitude",longitude);
+                                                            document.put("profileImagePath","null");
 
                                                             firestore.collection("user")
                                                                     .add(document)
