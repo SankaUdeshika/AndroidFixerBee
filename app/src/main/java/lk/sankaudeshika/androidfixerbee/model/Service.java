@@ -1,6 +1,17 @@
 package lk.sankaudeshika.androidfixerbee.model;
 
 public class Service {
+    String Id;
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+
     String email ;
     String locaiton;
     String locaiton_latitude;

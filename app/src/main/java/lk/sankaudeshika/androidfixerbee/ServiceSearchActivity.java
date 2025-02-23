@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +32,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lk.sankaudeshika.androidfixerbee.model.ServerURL;
 import lk.sankaudeshika.androidfixerbee.model.Service;
 
 public class ServiceSearchActivity extends AppCompatActivity {
@@ -77,10 +80,24 @@ public class ServiceSearchActivity extends AppCompatActivity {
 
                         for (DocumentSnapshot documentItem : documentList) {
 
-                            Service childService  = documentItem.toObject(Service.class);
+//                            Service childService  = documentItem.toObject(Service.class);
+                            Service childService = new Service();
+                            childService.setId(documentItem.getId());
+                            childService.setEmail(documentItem.getString("email"));
+                            childService.setLocation(documentItem.getString("locaiton"));
+                            childService.setLocaiton_latitude(documentItem.getString("locaiton_latitude"));
+                            childService.setLocation_longtitutde(documentItem.getString("locaiton_longitude"));
+                            childService.setMobile_1(documentItem.getString("mobile_1"));
+                            childService.setMobile_2(documentItem.getString("mobile_2"));
+
+                            childService.setSeller_company(documentItem.getString("seller_company"));
+                            childService.setSeller_name(documentItem.getString("seller_name"));
+                            childService.setStatus(documentItem.getString("status"));
+                            childService.setSub_category(documentItem.getString("sub_category"));
+
                             serviceList.add(childService);
 //                            Log.i("appout", "onComplete: "+documentItem.getString("locaiton"));
-                            Log.i("appout", "onComplete: "+childService.getLocation());
+//                            Log.i("appout", "onComplete: "+childService.getLocation());
 
                         }
 
@@ -106,6 +123,7 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
         TextView CompanyMobile;
         TextView status;
         Button ViewServiceBtn;
+        ImageView profileImageView;
         public ServiceViewHolder(@NonNull View itemView){
             super(itemView);
             CompanyName =  itemView.findViewById(R.id.textView14);
@@ -113,6 +131,7 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
             CompanyMobile = itemView.findViewById(R.id.textView18);
             status = itemView.findViewById(R.id.textView20);
             ViewServiceBtn = itemView.findViewById(R.id.ViewServiceBtn);
+            profileImageView = itemView.findViewById(R.id.profileImageView);
         }
     }
 
@@ -151,6 +170,11 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
                 ContextCompat.startActivity(context,intent,null);
             }
         });
+        Picasso.get()
+                .load(ServerURL.ServerImages+service.getId()+"seller_profileImage.jpg")
+                .resize(500, 500)
+                .centerCrop()
+                .into(holder.profileImageView);
     }
 
     @Override
