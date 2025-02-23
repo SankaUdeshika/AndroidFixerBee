@@ -1,5 +1,6 @@
 package lk.sankaudeshika.androidfixerbee;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,26 +15,46 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import lk.payhere.androidsdk.PHConfigs;
+import lk.payhere.androidsdk.PHConstants;
+import lk.payhere.androidsdk.PHMainActivity;
+import lk.payhere.androidsdk.PHResponse;
+import lk.payhere.androidsdk.model.InitRequest;
+import lk.payhere.androidsdk.model.Item;
+import lk.payhere.androidsdk.model.StatusResponse;
 import lk.sankaudeshika.androidfixerbee.model.SqlHelper;
 import lk.sankaudeshika.androidfixerbee.ui.mybookings.MyBookingFragment;
 
 public class BookNowActivity extends AppCompatActivity {
+
+    private static final int PAYHERE_REQUEST = 11010;
+      View pickupDate_View;
+     View pickupTime_View;
+    private String Customer_mobile;
+    private String Customer_user_id;
+    String vendor_id;
+    String vendor_mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +68,18 @@ public class BookNowActivity extends AppCompatActivity {
         });
 //        Get Intent Details
         Intent intent = getIntent();
-        String Customer_mobile = intent.getStringExtra("Customer_mobile_1");
-        String Customer_user_id = intent.getStringExtra("Logged_user_id");
-        String vendor_id = intent.getStringExtra("vendor_id");
-        String vendor_mobile = intent.getStringExtra("vendor_mobile");
-
+         Customer_mobile = intent.getStringExtra("Customer_mobile_1");
+         Customer_user_id = intent.getStringExtra("Logged_user_id");
+         vendor_id = intent.getStringExtra("vendor_id");
+         vendor_mobile = intent.getStringExtra("vendor_mobile");
 
 
 //        Link Pickup Date Layout
-        LayoutInflater inflater = LayoutInflater.from(BookNowActivity.this);
-        View pickupDate_View = inflater.inflate(R.layout.pickup_date_view,null,false);
+         LayoutInflater inflater = LayoutInflater.from(BookNowActivity.this);
+         pickupDate_View = inflater.inflate(R.layout.pickup_date_view, null, false);
 
 //        Link Pickup Time Layout
-        View pickupTime_View = inflater.inflate(R.layout.pickup_time,null,false);
+          pickupTime_View = inflater.inflate(R.layout.pickup_time, null, false);
 
 
         //        Popup DateBtn
@@ -82,11 +102,77 @@ public class BookNowActivity extends AppCompatActivity {
 
 
         //        Firebase Book Now
-        Button addBookingBtn =  findViewById(R.id.addBookingBtn);
+        Button addBookingBtn = findViewById(R.id.addBookingBtn);
         addBookingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // validation
+
+//                Payhere Initialize
+
+
+                try {
+                    InitRequest req = new InitRequest();
+                    req.setMerchantId("1221534");       // Merchant ID
+                    req.setCurrency("LKR");             // Currency code LKR/USD/GBP/EUR/AUD
+                    req.setAmount(1000.00);             // Final Amount to be charged
+                    req.setOrderId("230000123");        // Unique Reference ID
+                    req.setItemsDescription("Door bell wireless");  // Item description title
+                    req.setCustom1("This is the custom message 1");
+                    req.setCustom2("This is the custom message 2");
+                    req.getCustomer().setFirstName("Saman");
+                    req.getCustomer().setLastName("Perera");
+                    req.getCustomer().setEmail("samanp@gmail.com");
+                    req.getCustomer().setPhone("+94771234567");
+                    req.getCustomer().getAddress().setAddress("No.1, Galle Road");
+                    req.getCustomer().getAddress().setCity("Colombo");
+                    req.getCustomer().getAddress().setCountry("Sri Lanka");
+
+//Optional Params
+//                req.setNotifyUrl(“xxxx”);           // Notifiy Url
+//                req.getCustomer().getDeliveryAddress().setAddress("No.2, Kandy Road");
+//                req.getCustomer().getDeliveryAddress().setCity("Kadawatha");
+//                req.getCustomer().getDeliveryAddress().setCountry("Sri Lanka");
+//                req.getItems().add(new Item(null, "Door bell wireless", 1, 1000.0));
+
+
+                    Intent intent = new Intent(BookNowActivity.this, PHMainActivity.class);
+                    intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req);
+                    PHConfigs.setBaseUrl(PHConfigs.SANDBOX_URL);
+                    startActivityForResult(intent, PAYHERE_REQUEST); //unique request ID e.g. "11001"
+
+
+                } catch (Exception e) {
+                    Log.d("appout", "onClick: " + e);
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == PAYHERE_REQUEST && data != null && data.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) {
+
+            PHResponse<StatusResponse> response = null;
+            if (requestCode == PAYHERE_REQUEST && data != null && data.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) {
+                response = (PHResponse<StatusResponse>) data.getSerializableExtra(PHConstants.INTENT_EXTRA_RESULT);
+                if (resultCode == Activity.RESULT_OK) {
+
+                    Log.i("appout", String.valueOf(resultCode));
+
+                } else {
+                    String msg = "Result: " + (response != null ? response.toString() : "no response");
+                    Log.i("appout", msg);
+                }
+
+//                Booking Now process
+//               validation
                 CalendarView calendarView = pickupDate_View.findViewById(R.id.calendarView);
                 TimePicker Time = pickupTime_View.findViewById(R.id.pickupTime);
                 EditText description = findViewById(R.id.descriptionText);
@@ -154,16 +240,20 @@ public class BookNowActivity extends AppCompatActivity {
                                     new AlertDialog.Builder(BookNowActivity.this).setTitle("Error").setMessage("Something Wrong, Please Try again later").show();
                                 }
                             });
-
-
-
                 }
 
 
+
+                // Inside the fragment:
+                Intent intent = new Intent(BookNowActivity.this, HomeActivity.class);
+                startActivity(intent);
+
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+
+                Log.i("appout", response.toString());
             }
-        });
-
-
+        }
 
     }
 }

@@ -1,6 +1,8 @@
 package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +29,9 @@ public class HomeActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeBinding binding;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_myProfile,R.id.nav_myBookings)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_myProfile,R.id.nav_myBookings,R.id.nav_MyAction)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
@@ -65,9 +70,6 @@ public class HomeActivity extends AppCompatActivity {
         }else{
             new AlertDialog.Builder(HomeActivity.this).setTitle("You Booking is Saved").setMessage("you can check your Bookings from My Booking Section").show();
         }
-
-
-
     }
 
     @Override
@@ -83,4 +85,6 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }
+

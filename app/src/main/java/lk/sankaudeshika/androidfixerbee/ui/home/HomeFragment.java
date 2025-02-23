@@ -1,8 +1,13 @@
 package lk.sankaudeshika.androidfixerbee.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,9 +34,15 @@ import lk.sankaudeshika.androidfixerbee.ServiceSearchActivity;
 import lk.sankaudeshika.androidfixerbee.databinding.FragmentHomeBinding;
 import lk.sankaudeshika.androidfixerbee.model.SqlHelper;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SensorEventListener {
 
     private FragmentHomeBinding binding;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private long lastShakeTime = 0;
+    private static final long SHAKE_COOLDOWN = 2000;
+    private static final float SHAKE_THRESHOLD = 10f;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,26 +52,11 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
-        //        sqlite Test
-        SqlHelper sqlHelper = new SqlHelper(root.getContext(), "activity.db",null,1);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    SQLiteDatabase sqLiteDatabase = sqlHelper.getReadableDatabase();
-                    Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM `actions`",new String[]{});
-
-                    while(cursor.moveToNext()){
-                        Log.d("appout", "run: "+cursor.getString(1)+" "+ cursor.getString(0));
-                    }
-                } catch (Exception e) {
-                    Log.e("appout", e.toString());
-                    throw new RuntimeException(e);
-                }
-            }
-        }).start();
-
+//        Sensor Initlaizd
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        if(sensorManager != null){
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
 
 //        set Image Sliders
         ImageSlider imageSlider = root.findViewById(R.id.ImageSlider);
@@ -100,14 +96,57 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if(sensorManager != null){
+            sensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-
+        if(sensorManager != null && accelerometer !=null){
+            sensorManager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if(sensorManager != null){
+            sensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+
+            long curruntTime = System.currentTimeMillis();
+            if((curruntTime - lastShakeTime) > SHAKE_COOLDOWN){
+                float x = sensorEvent.values[0];
+                float y = sensorEvent.values[1];
+                float z = sensorEvent.values[2];
+
+                float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
+
+                if(acceleration > SHAKE_THRESHOLD){
+                    Log.e("appout", "Goto Login");
+
+                    lastShakeTime = curruntTime;
+
+                    Intent intent = new Intent(getContext(),LoginActivity.class);
+                    startActivity(intent);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
