@@ -55,4 +55,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation ("com.github.PayHereDevs:payhere-android-sdk:v3.0.17")
     implementation ("androidx.appcompat:appcompat:1.6.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

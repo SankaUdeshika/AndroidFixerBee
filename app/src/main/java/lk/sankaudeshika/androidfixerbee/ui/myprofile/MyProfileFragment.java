@@ -2,7 +2,9 @@ package lk.sankaudeshika.androidfixerbee.ui.myprofile;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,30 +22,47 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import lk.sankaudeshika.androidfixerbee.R;
+import lk.sankaudeshika.androidfixerbee.model.ServerURL;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MyProfileFragment extends Fragment {
 
     private static final int GALLERY_PERMISSION_CODE = 101;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ImageView imageView;
+    private File UploadImageFile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         imageView = view.findViewById(R.id.imageView3);
-        setupImagePicker(); // Initialize the launcher here
+        setupImagePicker();
 
         imageView.setOnClickListener(v -> {
             if (isPermissionGranted()) {
-                // Permission already granted
                 Toast.makeText(view.getContext(), "Storage Permission Already Granted", Toast.LENGTH_SHORT).show();
                 pickImageFromGallery();
             } else {
@@ -51,7 +70,69 @@ public class MyProfileFragment extends Fragment {
             }
         });
 
+        // Upload Image
+        Button ImageUploadBtn = view.findViewById(R.id.ImageUploadBtn);
+        ImageUploadBtn.setOnClickListener(v -> {
+            SharedPreferences sp = getActivity().getSharedPreferences("lk.sankaudeshika.androidfixerbee", Context.MODE_PRIVATE);
+            String UserID = sp.getString("Logged_user_id", "");
+
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("user").document(UserID).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            String useridValue = task.getResult().getId();
+
+                            String FileName = useridValue + "_profileImage";
+                            HashMap<String, Object> updateProfileImage = new HashMap<>();
+                            updateProfileImage.put("profileImagePath", FileName);
+                            Log.i("appout", "onComplete: " + FileName);
+
+                            firestore.collection("user").document(useridValue).update(updateProfileImage)
+                                    .addOnSuccessListener(unused -> {
+                                        Log.i("appout", "Firestore Update Success");
+
+                                        // Run the network request on a background thread
+                                        new Thread(() -> uploadImageToServer(FileName)).start();
+
+                                    })
+                                    .addOnFailureListener(e -> Log.e("appout", "Firestore Update Failed: " + e.getMessage()));
+                        } else {
+                            Log.e("appout", "Failed to fetch user document");
+                        }
+                    });
+        });
+
         return view;
+    }
+
+    private void uploadImageToServer(String fileName) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        if (UploadImageFile == null) {
+            Log.e("appout", "UploadImageFile is null");
+            return;
+        }
+
+        RequestBody fileBody = RequestBody.create(UploadImageFile, MediaType.get("image/*"));
+
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("image", UploadImageFile.getName(), fileBody)
+                .addFormDataPart("newfileImageName", fileName)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(ServerURL.ServerUrl)
+                .post(requestBody)
+                .build();
+
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            String responseText = response.body() != null ? response.body().string() : "No Response";
+            Log.i("appout", "Upload Success: " + responseText);
+        } catch (Exception e) {
+            Log.e("appout", "Upload Error: " + e.toString());
+        }
     }
 
     private void setupImagePicker() {
@@ -66,6 +147,7 @@ public class MyProfileFragment extends Fragment {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(
                                         requireContext().getContentResolver(), imageUri);
                                 imageView.setImageBitmap(bitmap);
+                                UploadImageFile = bitmapToFile(getContext(), bitmap);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -91,7 +173,6 @@ public class MyProfileFragment extends Fragment {
         requestPermissions(new String[]{permission}, GALLERY_PERMISSION_CODE);
     }
 
-    // Handle permission result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -108,5 +189,14 @@ public class MyProfileFragment extends Fragment {
     private void pickImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         imagePickerLauncher.launch(intent);
+    }
+
+    private static File bitmapToFile(Context context, Bitmap bitmap) throws IOException {
+        File file = new File(context.getCacheDir(), "upload_image_" + System.currentTimeMillis() + ".jpg");
+        FileOutputStream out = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        out.flush();
+        out.close();
+        return file;
     }
 }
