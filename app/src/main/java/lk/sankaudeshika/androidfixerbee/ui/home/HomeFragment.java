@@ -8,6 +8,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -51,6 +55,25 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+//        Video 1 Load
+        VideoView videoView1 = root.findViewById(R.id.videoView1);
+        MediaController mediaController = new MediaController(root.getContext());
+        mediaController.setMediaPlayer(videoView1);
+        mediaController.setAnchorView(videoView1);
+
+        videoView1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                Log.i("appout", "onCompletion: Video1 added");
+            }
+        });
+
+        Uri uri = Uri.parse("https://fitnessfirst.lk/Resources/Videos/Cleaning.mp4");
+        videoView1.setVideoURI(uri);
+        videoView1.start();
+
+
 
 //        Sensor Initlaizd
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);

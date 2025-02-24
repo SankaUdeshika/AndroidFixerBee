@@ -44,6 +44,9 @@ import lk.sankaudeshika.androidfixerbee.model.Service;
 
 public class ServiceSearchActivity extends AppCompatActivity {
 
+
+    private ServiceAdapter serviceAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +78,6 @@ public class ServiceSearchActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         List<DocumentSnapshot> documentList = task.getResult().getDocuments();
-
                         ArrayList<Service> serviceList = new ArrayList<>() ;
 
                         for (DocumentSnapshot documentItem : documentList) {
@@ -85,26 +87,24 @@ public class ServiceSearchActivity extends AppCompatActivity {
                             childService.setId(documentItem.getId());
                             childService.setEmail(documentItem.getString("email"));
                             childService.setLocation(documentItem.getString("locaiton"));
-                            childService.setLocaiton_latitude(documentItem.getString("locaiton_latitude"));
-                            childService.setLocation_longtitutde(documentItem.getString("locaiton_longitude"));
                             childService.setMobile_1(documentItem.getString("mobile_1"));
                             childService.setMobile_2(documentItem.getString("mobile_2"));
-
                             childService.setSeller_company(documentItem.getString("seller_company"));
                             childService.setSeller_name(documentItem.getString("seller_name"));
                             childService.setStatus(documentItem.getString("status"));
                             childService.setSub_category(documentItem.getString("sub_category"));
 
                             serviceList.add(childService);
-//                            Log.i("appout", "onComplete: "+documentItem.getString("locaiton"));
-//                            Log.i("appout", "onComplete: "+childService.getLocation());
 
                         }
+                        Log.i("appout", "ServiceAdapter: service list" + serviceList.size());
 
+                        serviceAdapter = new ServiceAdapter(serviceList,ServiceSearchActivity.this);
                         RecyclerView recyclerView = findViewById(R.id.recycleView);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ServiceSearchActivity.this,LinearLayoutManager.VERTICAL,false);
                         recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setAdapter(new ServiceAdapter(serviceList, ServiceSearchActivity.this));
+
+                        recyclerView.setAdapter(serviceAdapter);
 
                     }
                 });
@@ -119,7 +119,6 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
 
     class ServiceViewHolder extends RecyclerView.ViewHolder{
         TextView CompanyName;
-        TextView CompanyAddress;
         TextView CompanyMobile;
         TextView status;
         Button ViewServiceBtn;
@@ -127,7 +126,6 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
         public ServiceViewHolder(@NonNull View itemView){
             super(itemView);
             CompanyName =  itemView.findViewById(R.id.textView14);
-            CompanyAddress = itemView.findViewById(R.id.textView21);
             CompanyMobile = itemView.findViewById(R.id.textView18);
             status = itemView.findViewById(R.id.textView20);
             ViewServiceBtn = itemView.findViewById(R.id.ViewServiceBtn);
@@ -138,8 +136,8 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
     ArrayList<Service> ServiceArraylist;
     Context context;
 
-    public ServiceAdapter(ArrayList serviceArraylist, Context context) {
-        ServiceArraylist = serviceArraylist;
+    public ServiceAdapter(ArrayList serviceArraylist1, Context context) {
+        ServiceArraylist = serviceArraylist1;
         this.context = context;
     }
 
@@ -156,7 +154,6 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
         Service service = ServiceArraylist.get(position);
         holder.CompanyName.setText(service.getSeller_company());
-        holder.CompanyAddress.setText(service.getLocation());
         holder.CompanyMobile.setText(service.getMobile_1());
         holder.status.setText(service.getStatus());
 
@@ -175,6 +172,7 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
                 .resize(500, 500)
                 .centerCrop()
                 .into(holder.profileImageView);
+//        Log.i("appout", "onBindViewHolder: "+service.getMobile_1());
     }
 
     @Override

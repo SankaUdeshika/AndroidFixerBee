@@ -14,8 +14,7 @@ public class Service {
 
     String email ;
     String locaiton;
-    String locaiton_latitude;
-    String location_longtitutde;
+
     String mobile_1;
     String mobile_2;
     String password;
@@ -24,11 +23,10 @@ public class Service {
     String status;
     String sub_category;
 
-    public Service(String email, String locaiton, String locaiton_latitude, String location_longtitutde, String mobile_1, String mobile_2, String password, String seller_company, String seller_name, String status, String sub_category) {
+    public Service(String email, String locaiton,String mobile_1, String mobile_2, String password, String seller_company, String seller_name, String status, String sub_category) {
         this.email = email;
         this.locaiton = locaiton;
-        this.locaiton_latitude = locaiton_latitude;
-        this.location_longtitutde = location_longtitutde;
+
         this.mobile_1 = mobile_1;
         this.mobile_2 = mobile_2;
         this.password = password;
@@ -58,21 +56,11 @@ public class Service {
         this.locaiton = locaiton;
     }
 
-    public String getLocaiton_latitude() {
-        return locaiton_latitude;
-    }
 
-    public void setLocaiton_latitude(String locaiton_latitude) {
-        this.locaiton_latitude = locaiton_latitude;
-    }
 
-    public String getLocation_longtitutde() {
-        return location_longtitutde;
-    }
 
-    public void setLocation_longtitutde(String location_longtitutde) {
-        this.location_longtitutde = location_longtitutde;
-    }
+
+
 
     public String getMobile_1() {
         return mobile_1;

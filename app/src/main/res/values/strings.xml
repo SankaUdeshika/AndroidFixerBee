@@ -40,6 +40,10 @@
     <!--  My Profile text  -->
     <string name="action_profile_imageChange">Change Image</string>
 
+    <!--  Home page  -->
+    <string name="action_profile_Commercial">New Service Commerical Video</string>
+    <string name="Services">Top Service</string>
+
     <!-- Find Services Page-->
     <string name="services_Topic">Change Image</string>
 

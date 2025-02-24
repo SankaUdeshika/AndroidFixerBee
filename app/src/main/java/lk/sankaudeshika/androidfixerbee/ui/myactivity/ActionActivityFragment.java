@@ -46,9 +46,16 @@ public class ActionActivityFragment extends Fragment {
                         Log.d("appout", "run: "+cursor.getString(1)+" "+ cursor.getString(0));
                     }
 
-                    RecyclerView recyclerView = ActionView.findViewById(R.id.ActionRecycleView);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(ActionView.getContext(),LinearLayoutManager.VERTICAL,false));
-                    recyclerView.setAdapter(new ActionAdapter(actionArrayList));
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RecyclerView recyclerView = ActionView.findViewById(R.id.ActionRecycleView);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(ActionView.getContext(),LinearLayoutManager.VERTICAL,false));
+                            recyclerView.setAdapter(new ActionAdapter(actionArrayList));
+                        }
+                    });
+
+
 
                 } catch (Exception e) {
                     Log.e("appout", e.toString());
