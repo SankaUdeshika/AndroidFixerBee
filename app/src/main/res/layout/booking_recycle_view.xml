@@ -10,10 +10,10 @@
         android:id="@+id/vendorCompany"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="37dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
-        android:textSize="24sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,8 +25,10 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/vendorCompany"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vendorCompany" />
+        app:layout_constraintTop_toBottomOf="@+id/vendorCompany"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/bookdate"
@@ -52,9 +54,10 @@
         android:id="@+id/bookstatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="TextView"
         android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/booktime"
-        app:layout_constraintStart_toStartOf="@+id/bookdate"
-        tools:layout_editor_absoluteY="55dp" />
+        app:layout_constraintStart_toStartOf="@+id/bookdate" />
 </androidx.constraintlayout.widget.ConstraintLayout>

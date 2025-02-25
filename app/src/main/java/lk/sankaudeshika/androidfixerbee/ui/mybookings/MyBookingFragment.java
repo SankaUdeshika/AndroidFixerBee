@@ -128,7 +128,7 @@ class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHold
     @Override
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         Books books = BookingArraylist.get(position);
-        holder.CompanyName.setText(books.getVendor_id());
+        holder.CompanyName.setText(books.getDescription());
         holder.vendorMobile.setText(books.getVendorMobile());
         holder.bookdate.setText(books.getDate());
         holder.booktime.setText(books.getTime());

@@ -29,8 +29,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lk.sankaudeshika.androidfixerbee.LoginActivity;
 import lk.sankaudeshika.androidfixerbee.R;
@@ -85,7 +91,27 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         ImageSlider imageSlider = root.findViewById(R.id.ImageSlider);
         ArrayList<SlideModel> slideModels = new ArrayList<>();
 
-        slideModels.add(new SlideModel(R.drawable.banner1, ScaleTypes.FIT));
+        FirebaseFirestore firestore  = FirebaseFirestore.getInstance();
+        firestore.collection("cardimages").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                String banner1 ;
+                                String banner2 ;
+                                String banner3 ;
+                                String banner4 ;
+
+                                List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
+                                for (DocumentSnapshot documentItem: documentSnapshots) {
+                                  banner1=  documentItem.getString("banner1");
+                                  banner2= documentItem.getString("banner2");
+                                  banner3= documentItem.getString("banner3");
+                                  banner4= documentItem.getString("banner4");
+                                }
+                            }
+                        });
+
+        slideModels.add(new SlideModel(R.drawable.banner2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner3, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.banner4, ScaleTypes.FIT));

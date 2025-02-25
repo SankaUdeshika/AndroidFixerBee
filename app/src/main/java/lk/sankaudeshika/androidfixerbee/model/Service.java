@@ -2,6 +2,16 @@ package lk.sankaudeshika.androidfixerbee.model;
 
 public class Service {
     String Id;
+    String email ;
+    String locaiton;
+    String mobile_1;
+    String mobile_2;
+    String password;
+    String seller_company;
+    String seller_name;
+    String status;
+    String sub_category;
+
 
     public String getId() {
         return Id;
@@ -11,17 +21,6 @@ public class Service {
         Id = id;
     }
 
-
-    String email ;
-    String locaiton;
-
-    String mobile_1;
-    String mobile_2;
-    String password;
-    String seller_company;
-    String seller_name;
-    String status;
-    String sub_category;
 
     public Service(String email, String locaiton,String mobile_1, String mobile_2, String password, String seller_company, String seller_name, String status, String sub_category) {
         this.email = email;
