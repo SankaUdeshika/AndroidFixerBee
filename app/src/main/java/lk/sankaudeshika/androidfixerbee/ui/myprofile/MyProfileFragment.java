@@ -32,11 +32,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import lk.sankaudeshika.androidfixerbee.R;
 import lk.sankaudeshika.androidfixerbee.model.ServerURL;
@@ -61,6 +64,49 @@ public class MyProfileFragment extends Fragment {
         imageView = view.findViewById(R.id.imageView3);
         setupImagePicker();
 
+        //        Set Database ImagePath
+        SharedPreferences sp = getActivity().getSharedPreferences("lk.sankaudeshika.androidfixerbee", Context.MODE_PRIVATE);
+        String Logged_mobile = sp.getString("Logged_mobile", "");
+        String UserID = sp.getString("Logged_user_id", "");
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("user")
+                        .whereEqualTo("mobile",Logged_mobile)
+                                .get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                List<DocumentSnapshot> documentList = queryDocumentSnapshots.getDocuments();
+
+                                                for (DocumentSnapshot documentItem :documentList ) {
+                                                    try {
+                                                        String ImagePath =documentItem.getString("profileImagePath");
+                                                        if(!ImagePath.equals("null")){
+                                                            Log.i("appout", ServerURL.ServerImages+UserID+"_profileImage.jpg");
+                                                        Picasso.get()
+                                                        .load(ServerURL.ServerImages+UserID+"_profileImage.jpg")
+                                                        .resize(500, 500)
+                                                        .centerCrop()
+                                                        .into(imageView);
+                                                        }
+                                                    } catch (Exception e) {
+                                                        Log.i("appout", "onSuccess: "+e.toString());
+                                                        throw new RuntimeException(e);
+                                                    }
+
+                                                }
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("appout", "onFailure: No Profile Image");
+                    }
+                });
+
+
+
+
+
         imageView.setOnClickListener(v -> {
             if (isPermissionGranted()) {
                 Toast.makeText(view.getContext(), "Storage Permission Already Granted", Toast.LENGTH_SHORT).show();
@@ -73,10 +119,9 @@ public class MyProfileFragment extends Fragment {
         // Upload Image
         Button ImageUploadBtn = view.findViewById(R.id.ImageUploadBtn);
         ImageUploadBtn.setOnClickListener(v -> {
-            SharedPreferences sp = getActivity().getSharedPreferences("lk.sankaudeshika.androidfixerbee", Context.MODE_PRIVATE);
-            String UserID = sp.getString("Logged_user_id", "");
 
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+
             firestore.collection("user").document(UserID).get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && task.getResult() != null) {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,15 +32,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lk.sankaudeshika.androidfixerbee.model.ServerURL;
 import lk.sankaudeshika.androidfixerbee.model.Service;
 
 public class ServiceSearchActivity extends AppCompatActivity {
+
+
+    private ServiceAdapter serviceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,22 +78,33 @@ public class ServiceSearchActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         List<DocumentSnapshot> documentList = task.getResult().getDocuments();
-
                         ArrayList<Service> serviceList = new ArrayList<>() ;
 
                         for (DocumentSnapshot documentItem : documentList) {
 
-                            Service childService  = documentItem.toObject(Service.class);
+//                            Service childService  = documentItem.toObject(Service.class);
+                            Service childService = new Service();
+                            childService.setId(documentItem.getId());
+                            childService.setEmail(documentItem.getString("email"));
+                            childService.setLocation(documentItem.getString("locaiton"));
+                            childService.setMobile_1(documentItem.getString("mobile_1"));
+                            childService.setMobile_2(documentItem.getString("mobile_2"));
+                            childService.setSeller_company(documentItem.getString("seller_company"));
+                            childService.setSeller_name(documentItem.getString("seller_name"));
+                            childService.setStatus(documentItem.getString("status"));
+                            childService.setSub_category(documentItem.getString("sub_category"));
+
                             serviceList.add(childService);
-//                            Log.i("appout", "onComplete: "+documentItem.getString("locaiton"));
-                            Log.i("appout", "onComplete: "+childService.getLocation());
 
                         }
+                        Log.i("appout", "ServiceAdapter: service list" + serviceList.size());
 
+                        serviceAdapter = new ServiceAdapter(serviceList,ServiceSearchActivity.this);
                         RecyclerView recyclerView = findViewById(R.id.recycleView);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ServiceSearchActivity.this,LinearLayoutManager.VERTICAL,false);
                         recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setAdapter(new ServiceAdapter(serviceList, ServiceSearchActivity.this));
+
+                        recyclerView.setAdapter(serviceAdapter);
 
                     }
                 });
@@ -102,25 +119,25 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
 
     class ServiceViewHolder extends RecyclerView.ViewHolder{
         TextView CompanyName;
-        TextView CompanyAddress;
         TextView CompanyMobile;
         TextView status;
         Button ViewServiceBtn;
+        ImageView profileImageView;
         public ServiceViewHolder(@NonNull View itemView){
             super(itemView);
             CompanyName =  itemView.findViewById(R.id.textView14);
-            CompanyAddress = itemView.findViewById(R.id.textView21);
             CompanyMobile = itemView.findViewById(R.id.textView18);
             status = itemView.findViewById(R.id.textView20);
             ViewServiceBtn = itemView.findViewById(R.id.ViewServiceBtn);
+            profileImageView = itemView.findViewById(R.id.profileImageView);
         }
     }
 
     ArrayList<Service> ServiceArraylist;
     Context context;
 
-    public ServiceAdapter(ArrayList serviceArraylist, Context context) {
-        ServiceArraylist = serviceArraylist;
+    public ServiceAdapter(ArrayList serviceArraylist1, Context context) {
+        ServiceArraylist = serviceArraylist1;
         this.context = context;
     }
 
@@ -137,7 +154,6 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
         Service service = ServiceArraylist.get(position);
         holder.CompanyName.setText(service.getSeller_company());
-        holder.CompanyAddress.setText(service.getLocation());
         holder.CompanyMobile.setText(service.getMobile_1());
         holder.status.setText(service.getStatus());
 
@@ -151,6 +167,12 @@ class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHold
                 ContextCompat.startActivity(context,intent,null);
             }
         });
+        Picasso.get()
+                .load(ServerURL.ServerImages+service.getId()+"seller_profileImage.jpg")
+                .resize(500, 500)
+                .centerCrop()
+                .into(holder.profileImageView);
+//        Log.i("appout", "onBindViewHolder: "+service.getMobile_1());
     }
 
     @Override

@@ -14,7 +14,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:text="TextView"
+        android:text="Your Activity"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="34sp"
