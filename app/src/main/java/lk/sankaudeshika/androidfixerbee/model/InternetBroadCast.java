@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import lk.sankaudeshika.androidfixerbee.MainActivity;
+import lk.sankaudeshika.androidfixerbee.NoInternetActivity;
 import lk.sankaudeshika.androidfixerbee.RegisterActivity;
 
 public class InternetBroadCast extends BroadcastReceiver {
@@ -35,6 +37,8 @@ public class InternetBroadCast extends BroadcastReceiver {
             } else {
                 Log.i("appout", "onReceive: NO CONNECTION");
                 Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(context,NoInternetActivity.class);
+                context.startActivity(i);
             }
         }
        

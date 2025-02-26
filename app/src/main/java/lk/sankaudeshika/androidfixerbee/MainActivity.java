@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         InternetBroadCast internetBroadCast = new InternetBroadCast();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(internetBroadCast, intentFilter);
+        Intent i = new Intent(MainActivity.this,NoInternetActivity.class);
+        internetBroadCast.onReceive(MainActivity.this,i);
 
 
 
