@@ -81,4 +81,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+<!--    no wifi activity-->
+    <string name="noconneciton">No Connection.</string>
+    <string name="pleasery">please try agin later</string>
+
+
 </resources>

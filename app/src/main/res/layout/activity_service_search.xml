@@ -50,7 +50,7 @@
     </androidx.cardview.widget.CardView>
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/searchButton"
         android:layout_width="63dp"
         android:layout_height="63dp"
         android:background="@color/SecondColor"
@@ -62,14 +62,27 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
-        android:layout_width="409dp"
-        android:layout_height="650dp"
+        android:layout_width="398dp"
+        android:layout_height="515dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="52dp"
         android:layout_marginEnd="1dp"
+        android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+        app:layout_constraintTop_toBottomOf="@+id/searchButton" />
+
+    <ImageButton
+        android:id="@+id/BackButton"
+        android:layout_width="61dp"
+        android:layout_height="61dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/ic_launcher_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycleView"
+        app:layout_constraintVertical_bias="0.609"
+        app:srcCompat="@drawable/undo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

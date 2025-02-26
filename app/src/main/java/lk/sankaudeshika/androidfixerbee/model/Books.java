@@ -1,14 +1,17 @@
 package lk.sankaudeshika.androidfixerbee.model;
 
 public class Books {
+    String BookId;
     String description;
     String status;
+
     String time;
     String date;
     String vendor_id;
     String vendorMobile;
 
-    public Books(String description, String status, String time, String date, String vendor_id, String vendorMobile) {
+    public Books(String BookId,String description, String status, String time, String date, String vendor_id, String vendorMobile) {
+        this.BookId = BookId;
         this.description = description;
         this.status = status;
         this.time = time;
@@ -64,4 +67,9 @@ public class Books {
     public void setVendorMobile(String vendorMobile) {
         this.vendorMobile = vendorMobile;
     }
+
+    public String getBookId() {
+        return BookId;
+    }
+
 }

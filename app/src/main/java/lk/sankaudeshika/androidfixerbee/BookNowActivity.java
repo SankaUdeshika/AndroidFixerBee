@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.UUID;
 
 import lk.payhere.androidsdk.PHConfigs;
 import lk.payhere.androidsdk.PHConstants;
@@ -49,6 +50,8 @@ import lk.sankaudeshika.androidfixerbee.ui.mybookings.MyBookingFragment;
 public class BookNowActivity extends AppCompatActivity {
 
     private static final int PAYHERE_REQUEST = 11010;
+    private static final int ADVANCEDPAYMENT = 500;
+
       View pickupDate_View;
      View pickupTime_View;
     private String Customer_mobile;
@@ -114,7 +117,7 @@ public class BookNowActivity extends AppCompatActivity {
                     InitRequest req = new InitRequest();
                     req.setMerchantId("1221534");       // Merchant ID
                     req.setCurrency("LKR");             // Currency code LKR/USD/GBP/EUR/AUD
-                    req.setAmount(1000.00);             // Final Amount to be charged
+                    req.setAmount(ADVANCEDPAYMENT);             // Final Amount to be charged
                     req.setOrderId("230000123");        // Unique Reference ID
                     req.setItemsDescription("Door bell wireless");  // Item description title
                     req.setCustom1("This is the custom message 1");
@@ -171,7 +174,7 @@ public class BookNowActivity extends AppCompatActivity {
                     Log.i("appout", msg);
                 }
 
-//                Booking Now process
+//               Booking Now process
 //               validation
                 CalendarView calendarView = pickupDate_View.findViewById(R.id.calendarView);
                 TimePicker Time = pickupTime_View.findViewById(R.id.pickupTime);
@@ -206,7 +209,7 @@ public class BookNowActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentReference documentReference) {
                                     MyBookingFragment myBookingFragment = new MyBookingFragment();
 
-                                    //                                            SQL Insert Login
+                                    //  SQL Insert Login
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {

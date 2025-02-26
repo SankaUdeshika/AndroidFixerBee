@@ -99,8 +99,8 @@ public class ServiceViewActivity extends AppCompatActivity {
                                service_sub_category.setText(documentItem.getString("sub_category"));
                                service_email.setText(documentItem.getString("email"));
                                service_locaiton.setText(documentItem.getString("locaiton"));
-                               locaiton_latitude= Double.parseDouble(documentItem.getString("locaiton_latitude")) ;
-                               locaiton_longitude=Double.parseDouble(documentItem.getString("locaiton_longitude"));
+                                locaiton_latitude = documentItem.getDouble("locaiton_latitude");
+                               locaiton_longitude = documentItem.getDouble("locaiton_longitude");
                                Log.i("appout",String.valueOf(locaiton_longitude));
                         }
 
