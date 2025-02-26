@@ -31,8 +31,8 @@ public class InternetBroadCast extends BroadcastReceiver {
                         Toast.makeText(context, "Mobile Data is ON", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.i("appout", "onReceive: OFF");
-                    Toast.makeText(context, "Mobile Data is OFF", Toast.LENGTH_SHORT).show();
+                    Log.i("appout", "onReceive: ON");
+                    Toast.makeText(context, "Mobile Data is ON", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Log.i("appout", "onReceive: NO CONNECTION");
