@@ -2,6 +2,7 @@ package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -35,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        BroadCast Internet Reciver
         InternetBroadCast internetBroadCast = new InternetBroadCast();
-        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(internetBroadCast, intentFilter);
+
 
 
 

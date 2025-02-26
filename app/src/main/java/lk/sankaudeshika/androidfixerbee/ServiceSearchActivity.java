@@ -2,6 +2,7 @@ package lk.sankaudeshika.androidfixerbee;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,6 +69,31 @@ public class ServiceSearchActivity extends AppCompatActivity {
            EditText SearchBox = findViewById(R.id.servicesMainSerch);
            SearchBox.setText(searchText);
         }
+
+//        Search again Button
+        ImageButton searchButton = findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText text = findViewById(R.id.servicesMainSerch);
+                Intent i = new Intent(ServiceSearchActivity.this, ServiceSearchActivity.class);
+                i.putExtra("SearchText",text.getText().toString());
+                startActivity(i);
+            }
+        });
+
+//        Back Button
+        ImageButton backButton = findViewById(R.id.BackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText text = findViewById(R.id.servicesMainSerch);
+                Intent i = new Intent(ServiceSearchActivity.this, HomeActivity.class);
+                i.putExtra("SearchText",text.getText().toString());
+                startActivity(i);
+            }
+        });
+
 
 //        load Recycle View
         EditText getCurruntSeartchText = findViewById(R.id.servicesMainSerch);
