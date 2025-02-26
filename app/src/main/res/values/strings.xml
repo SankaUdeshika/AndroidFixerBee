@@ -39,6 +39,7 @@
 
     <!--  My Profile text  -->
     <string name="action_profile_imageChange">Change Image</string>
+    <string name="action_profile_newpasswordChange">New Password</string>
 
     <!--  Home page  -->
     <string name="action_profile_Commercial">New Service Commerical Video</string>

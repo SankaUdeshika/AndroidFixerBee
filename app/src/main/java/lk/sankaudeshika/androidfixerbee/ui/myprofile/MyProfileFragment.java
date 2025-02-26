@@ -14,8 +14,10 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -106,7 +110,6 @@ public class MyProfileFragment extends Fragment {
 
 
 
-
         imageView.setOnClickListener(v -> {
             if (isPermissionGranted()) {
                 Toast.makeText(view.getContext(), "Storage Permission Already Granted", Toast.LENGTH_SHORT).show();
@@ -146,6 +149,55 @@ public class MyProfileFragment extends Fragment {
                         }
                     });
         });
+
+//        Change Password Process
+         Button changePasswordbtn = view.findViewById(R.id.ChangePasswordBtn);
+         changePasswordbtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view2) {
+                 EditText curruntPassword = view.findViewById(R.id.curruntPassword);
+                 EditText newPassword = view.findViewById(R.id.newPassword);
+
+                 firestore.collection("user").document(UserID).get()
+                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                             @Override
+                             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                 String dbCurruntPassword = documentSnapshot.getString("password");
+                                 if(dbCurruntPassword.equals(curruntPassword)){
+                                     HashMap<String,Object> newPasswordMap = new HashMap<>();
+                                     newPasswordMap.put("password",newPassword);
+
+                                     firestore.collection("user").document(UserID).update(newPasswordMap)
+                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                 @Override
+                                                 public void onSuccess(Void unused) {
+                                                     new AlertDialog.Builder(view.getContext()).setTitle("Update Success").show();
+                                                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                                                     ft.detach(MyProfileFragment.this).attach(MyProfileFragment.this).commit();
+                                                 }
+                                             })
+
+                                             .addOnFailureListener(new OnFailureListener() {
+                                                 @Override
+                                                 public void onFailure(@NonNull Exception e) {
+                                                     new AlertDialog.Builder(view.getContext()).setTitle("Error").setMessage("Something wrong, please try again later").show();
+                                                 }
+                                             });
+
+                                 }
+                             }
+                         })
+
+                         .addOnFailureListener(new OnFailureListener() {
+                             @Override
+                             public void onFailure(@NonNull Exception e) {
+                                new AlertDialog.Builder(view.getContext()).setTitle("Something Wrong, Please try again later");
+                             }
+                         });
+
+             }
+         });
+
 
         return view;
     }
