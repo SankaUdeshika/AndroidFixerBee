@@ -93,11 +93,25 @@
         android:id="@+id/addBookingBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/BookNow_BookNow_Btn"
+        android:text="@string/pybtn"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+
+    <TextView
+        android:id="@+id/textView46"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/paymentDescrption"
+        android:textAlignment="center"
+        android:textColor="@color/color_red"
+        app:layout_constraintEnd_toEndOf="@+id/addBookingBtn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/addBookingBtn"
+        tools:layout_editor_absoluteY="529dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

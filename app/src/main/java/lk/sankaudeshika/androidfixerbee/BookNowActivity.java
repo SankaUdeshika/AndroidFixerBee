@@ -32,6 +32,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -109,10 +110,7 @@ public class BookNowActivity extends AppCompatActivity {
         addBookingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 //                Payhere Initialize
-
-
                 try {
                     InitRequest req = new InitRequest();
                     req.setMerchantId("1221534");       // Merchant ID
@@ -167,91 +165,90 @@ public class BookNowActivity extends AppCompatActivity {
                 response = (PHResponse<StatusResponse>) data.getSerializableExtra(PHConstants.INTENT_EXTRA_RESULT);
                 if (resultCode == Activity.RESULT_OK) {
 
-                    Log.i("appout", String.valueOf(resultCode));
+                    Log.i("appout", "ResultCode is = "+ resultCode);
+
+                    //               Booking Now process
+//               validation
+                    CalendarView calendarView = pickupDate_View.findViewById(R.id.calendarView);
+                    TimePicker Time = pickupTime_View.findViewById(R.id.pickupTime);
+                    EditText description = findViewById(R.id.descriptionText);
+//
+                    long selectedDateInMillis = calendarView.getDate();
+                    int hour = Time.getHour();
+                    int minute = Time.getMinute();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+                    String formattedDate = sdf.format(new Date(selectedDateInMillis));
+                    String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+
+                    if(description.getText().toString().isEmpty()){
+                        Toast.makeText(BookNowActivity.this, "Please Enter You desciption", Toast.LENGTH_SHORT).show();
+                    }else{
+                        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                        HashMap<String,Object> BookingMap = new HashMap<>();
+
+                        BookingMap.put("cusomier_id",Customer_mobile);
+                        BookingMap.put("date",formattedDate);
+                        BookingMap.put("description",description.getText().toString());
+                        BookingMap.put("status","pending");
+                        BookingMap.put("time",formattedTime);
+                        BookingMap.put("vendor_id",vendor_id);
+                        BookingMap.put("vendor_mobile",vendor_mobile);
+
+                        firestore.collection("booking").add(BookingMap)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        MyBookingFragment myBookingFragment = new MyBookingFragment();
+
+                                        //  SQL Insert Login
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                                                    String currunt_date  = simpleDate.format(new Date());
+                                                    SimpleDateFormat simpleTime = new SimpleDateFormat("HH:mm:ss");
+                                                    String currunt_time = simpleTime.format(new Date());
+
+                                                    SqlHelper sqlHelper = new SqlHelper(BookNowActivity.this,"activity.db",null,1);
+                                                    SQLiteDatabase sqLiteDatabase1 = sqlHelper.getWritableDatabase();
+                                                    sqLiteDatabase1.execSQL("INSERT INTO `actions` (`action_name`,`action_date`,`action_time`) VALUES('User Booked','"+currunt_date+"','"+currunt_time+"')");
+
+                                                } catch (Exception e) {
+                                                    Log.i("appout", e.toString());
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                        }).start();
+
+                                        Intent intent1 = new Intent(BookNowActivity.this, HomeActivity.class);
+                                        intent1.putExtra("bookingresult","Yes");
+                                        startActivity(intent1);
+
+                                    }
+                                })
+
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        new AlertDialog.Builder(BookNowActivity.this).setTitle("Error").setMessage("Something Wrong, Please Try again later").show();
+                                    }
+                                });
+                    }
+
+
+
+                    // Inside the fragment:
+                    Intent intent = new Intent(BookNowActivity.this, HomeActivity.class);
+                    startActivity(intent);
 
                 } else {
+                    new AlertDialog.Builder(this).setTitle("cancel booking?").setMessage("if you wanna get this Service you have to pay 500 advance payment for this").show();
                     String msg = "Result: " + (response != null ? response.toString() : "no response");
                     Log.i("appout", msg);
                 }
-
-//               Booking Now process
-//               validation
-                CalendarView calendarView = pickupDate_View.findViewById(R.id.calendarView);
-                TimePicker Time = pickupTime_View.findViewById(R.id.pickupTime);
-                EditText description = findViewById(R.id.descriptionText);
-//
-                long selectedDateInMillis = calendarView.getDate();
-                int hour = Time.getHour();
-                int minute = Time.getMinute();
-
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-                String formattedDate = sdf.format(new Date(selectedDateInMillis));
-                String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-
-                if(description.getText().toString().isEmpty()){
-                    Toast.makeText(BookNowActivity.this, "Please Enter You desciption", Toast.LENGTH_SHORT).show();
-                }else{
-                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                    HashMap<String,Object> BookingMap = new HashMap<>();
-
-                    BookingMap.put("cusomier_id",Customer_mobile);
-                    BookingMap.put("date",formattedDate);
-                    BookingMap.put("description",description.getText().toString());
-                    BookingMap.put("status","pending");
-                    BookingMap.put("time",formattedTime);
-                    BookingMap.put("vendor_id",vendor_id);
-                    BookingMap.put("vendor_mobile",vendor_mobile);
-
-                    firestore.collection("booking").add(BookingMap)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    MyBookingFragment myBookingFragment = new MyBookingFragment();
-
-                                    //  SQL Insert Login
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
-                                                String currunt_date  = simpleDate.format(new Date());
-                                                SimpleDateFormat simpleTime = new SimpleDateFormat("HH:mm:ss");
-                                                String currunt_time = simpleTime.format(new Date());
-
-                                                SqlHelper sqlHelper = new SqlHelper(BookNowActivity.this,"activity.db",null,1);
-                                                SQLiteDatabase sqLiteDatabase1 = sqlHelper.getWritableDatabase();
-                                                sqLiteDatabase1.execSQL("INSERT INTO `actions` (`action_name`,`action_date`,`action_time`) VALUES('User Booked','"+currunt_date+"','"+currunt_time+"')");
-
-                                            } catch (Exception e) {
-                                                Log.i("appout", e.toString());
-                                                throw new RuntimeException(e);
-                                            }
-                                        }
-                                    }).start();
-
-                                    Intent intent1 = new Intent(BookNowActivity.this, HomeActivity.class);
-                                    intent1.putExtra("bookingresult","Yes");
-                                    startActivity(intent1);
-
-                                }
-                            })
-
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    new AlertDialog.Builder(BookNowActivity.this).setTitle("Error").setMessage("Something Wrong, Please Try again later").show();
-                                }
-                            });
-                }
-
-
-
-                // Inside the fragment:
-                Intent intent = new Intent(BookNowActivity.this, HomeActivity.class);
-                startActivity(intent);
-
-
             } else if (resultCode == Activity.RESULT_CANCELED) {
 
                 Log.i("appout", response.toString());

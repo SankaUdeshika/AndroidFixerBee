@@ -70,6 +70,8 @@
     <string name="Action_menu">My Activities</string>
     <string name="Action_date">Date :- </string>
     <string name="Action_time">Time :- </string>
+    <string name="pybtn">Pay Advanced and Book Now</string>
+    <string name="paymentDescrption">If you book a service. pay adnvace payment :- Rs.500</string>
 
     <!--    Navigation Text-->
     <string name="menu_home">Home</string>
