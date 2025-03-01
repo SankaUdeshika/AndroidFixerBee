@@ -3,6 +3,10 @@ package lk.sankaudeshika.androidfixerbee.ui.mybookings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,11 +14,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,39 +41,52 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import lk.sankaudeshika.androidfixerbee.LoginActivity;
 import lk.sankaudeshika.androidfixerbee.R;
 
 import lk.sankaudeshika.androidfixerbee.ServiceSearchActivity;
 import lk.sankaudeshika.androidfixerbee.ServiceViewActivity;
+import lk.sankaudeshika.androidfixerbee.databinding.FragmentHomeBinding;
 import lk.sankaudeshika.androidfixerbee.model.Books;
 import lk.sankaudeshika.androidfixerbee.model.ServerURL;
 import lk.sankaudeshika.androidfixerbee.model.Service;
 import lk.sankaudeshika.androidfixerbee.ui.home.HomeFragment;
 
-public class MyBookingFragment extends Fragment {
+public class MyBookingFragment extends Fragment implements SensorEventListener {
 
-    private  ArrayList<Books>IterateBooksArrayList;
+    private FragmentHomeBinding binding;
+    private ArrayList<Books> IterateBooksArrayList;
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private long lastShakeTime = 0;
+    private static final long SHAKE_COOLDOWN = 2000;
+    private static final float SHAKE_THRESHOLD = 10f;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View inflateView =  inflater.inflate(R.layout.fragment_my_booking, container, false);
+        View inflateView = inflater.inflate(R.layout.fragment_my_booking, container, false);
 
-//        get Data
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+
         SharedPreferences sp = getActivity().getSharedPreferences("lk.sankaudeshika.androidfixerbee", Context.MODE_PRIVATE);
-        String customerMobile = sp.getString("Logged_mobile","null");
+        String customerMobile = sp.getString("Logged_mobile", "null");
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("booking")
-                .whereEqualTo("cusomier_id",customerMobile)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<DocumentSnapshot> documentList = queryDocumentSnapshots.getDocuments();
+                .whereEqualTo("cusomier_id", customerMobile)
+                .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                    if (error != null) {
+                        Log.e("FirestoreError", "Error fetching bookings", error);
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null) {
                         IterateBooksArrayList = new ArrayList<>();
-                        for (DocumentSnapshot documentItem: documentList) {
+                        for (DocumentSnapshot documentItem : queryDocumentSnapshots.getDocuments()) {
                             Books books = new Books(
                                     documentItem.getId(),
                                     documentItem.getString("description"),
@@ -76,24 +95,70 @@ public class MyBookingFragment extends Fragment {
                                     documentItem.getString("date"),
                                     documentItem.getString("vendor_id"),
                                     documentItem.getString("vendor_mobile")
-                                    );
-
+                            );
                             IterateBooksArrayList.add(books);
                         }
-                        BookingAdapter bookingAdapter = new BookingAdapter(IterateBooksArrayList,inflateView.getContext() );
-                        RecyclerView recyclerView = getActivity().findViewById(R.id.bookingStatusRecycleView);
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext(),LinearLayoutManager.VERTICAL,false);
-                        recyclerView.setLayoutManager(linearLayoutManager);
-
+                        BookingAdapter bookingAdapter = new BookingAdapter(IterateBooksArrayList, inflateView.getContext());
+                        RecyclerView recyclerView = inflateView.findViewById(R.id.bookingStatusRecycleView);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false));
                         recyclerView.setAdapter(bookingAdapter);
                     }
                 });
 
-        return  inflateView;
-
+        return inflateView;
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long curruntTime = System.currentTimeMillis();
+            if ((curruntTime - lastShakeTime) > SHAKE_COOLDOWN) {
+                float x = sensorEvent.values[0];
+                float y = sensorEvent.values[1];
+                float z = sensorEvent.values[2];
+
+                float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
+
+                if (acceleration > SHAKE_THRESHOLD) {
+                    Log.e("appout", "Goto Login");
+                    lastShakeTime = curruntTime;
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {}
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (sensorManager != null && accelerometer != null) {
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+    }
 }
+
+
 
 
 
@@ -164,8 +229,7 @@ class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHold
                             @Override
                             public void onSuccess(Void unused) {
                                 // Refresh the current fragment
-                               new AlertDialog.Builder(view.getContext()).setTitle("Delete Success").show();
-
+                               new AlertDialog.Builder(view.getContext()).setTitle("Delete Success").setMessage("Your Booking Detail Successfuly removed").show();
                             }
                         });
             }
